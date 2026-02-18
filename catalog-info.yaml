@@ -1,0 +1,100 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: auth0-management-api
+  description: Auth0 Management API service for managing applications and authentication
+  annotations:
+    github.com/project-slug: your-github-username/auth0-management-api
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - auth0
+    - authentication
+    - management-api
+    - nodejs
+    - api
+  links:
+    - url: https://your-api-url.com
+      title: Production API
+      icon: web
+    - url: https://auth0.com/docs/api/management/v2
+      title: Auth0 Management API Docs
+      icon: docs
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: authentication
+  providesApis:
+    - auth0-management
+  dependsOn:
+    - resource:auth0-tenant
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: auth0-management
+  description: REST API for Auth0 management operations
+spec:
+  type: openapi
+  lifecycle: production
+  owner: platform-team
+  system: authentication
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Auth0 Management API
+      version: 1.0.0
+      description: API for managing Auth0 applications and authentication
+    paths:
+      /api/auth0/token:
+        get:
+          summary: Get Bearer Token
+          responses:
+            '200':
+              description: Successful response
+      /api/auth0/applications:
+        get:
+          summary: List all applications
+          responses:
+            '200':
+              description: Successful response
+        post:
+          summary: Create new application
+          responses:
+            '201':
+              description: Application created
+      /api/auth0/applications/{clientId}:
+        get:
+          summary: Get application by ID
+          parameters:
+            - name: clientId
+              in: path
+              required: true
+              schema:
+                type: string
+          responses:
+            '200':
+              description: Successful response
+        patch:
+          summary: Update application
+          parameters:
+            - name: clientId
+              in: path
+              required: true
+              schema:
+                type: string
+          responses:
+            '200':
+              description: Application updated
+        delete:
+          summary: Delete application
+          parameters:
+            - name: clientId
+              in: path
+              required: true
+              schema:
+                type: string
+          responses:
+            '200':
+              description: Application deleted
