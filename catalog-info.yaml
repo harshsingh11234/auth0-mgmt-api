@@ -4,7 +4,7 @@ metadata:
   name: auth0-management-api
   description: Auth0 Management API service for managing applications and authentication
   annotations:
-    github.com/project-slug: myorg/auth0-management-api  # ✅ Update with actual org/repo
+    github.com/project-slug: https://github.com/harshsingh11234/auth0-mgmt-api  # ✅ Update with actual org/repo
     backstage.io/techdocs-ref: dir:.
     backstage.io/source-location: url:https://github.com/harshsingh11234/auth0-mgmt-api/  # ✅ Add this
   tags:
@@ -155,4 +155,5 @@ metadata:
   description: Platform Engineering Team
 spec:
   type: team
+
   children: []
