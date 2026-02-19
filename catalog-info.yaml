@@ -4,8 +4,9 @@ metadata:
   name: auth0-management-api
   description: Auth0 Management API service for managing applications and authentication
   annotations:
-    github.com/project-slug: your-github-username/auth0-management-api
+    github.com/project-slug: myorg/auth0-management-api  # ✅ Update with actual org/repo
     backstage.io/techdocs-ref: dir:.
+    backstage.io/source-location: url:https://github.com/harshsingh11234/auth0-mgmt-api/  # ✅ Add this
   tags:
     - auth0
     - authentication
@@ -13,7 +14,7 @@ metadata:
     - nodejs
     - api
   links:
-    - url: https://your-api-url.com
+    - url: https://dev-a0e8fgdagji16lue.us.auth0.com/api/v2/ # ✅ Update with actual URL
       title: Production API
       icon: web
     - url: https://auth0.com/docs/api/management/v2
@@ -27,7 +28,7 @@ spec:
   providesApis:
     - auth0-management
   dependsOn:
-    - resource:auth0-tenant
+    - resource:default/auth0-tenant  # ✅ Better to specify namespace
 
 ---
 apiVersion: backstage.io/v1alpha1
@@ -35,6 +36,8 @@ kind: API
 metadata:
   name: auth0-management
   description: REST API for Auth0 management operations
+  annotations:
+    backstage.io/definition-at-location: url:https://github.com/myorg/auth0-management-api/blob/main/openapi.yaml  # ✅ Optional: link to actual OpenAPI spec
 spec:
   type: openapi
   lifecycle: production
@@ -46,13 +49,26 @@ spec:
       title: Auth0 Management API
       version: 1.0.0
       description: API for managing Auth0 applications and authentication
+    servers:  # ✅ Add servers
+      - url: https://dev-a0e8fgdagji16lue.us.auth0.com/api/v2/
+        description: Production server
     paths:
       /api/auth0/token:
         get:
           summary: Get Bearer Token
+          description: Retrieves a bearer token for Auth0 API authentication
           responses:
             '200':
               description: Successful response
+              content:  # ✅ Add response schema
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                      token_type:
+                        type: string
       /api/auth0/applications:
         get:
           summary: List all applications
@@ -61,6 +77,15 @@ spec:
               description: Successful response
         post:
           summary: Create new application
+          requestBody:  # ✅ Add request body
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    name:
+                      type: string
           responses:
             '201':
               description: Application created
@@ -98,3 +123,36 @@ spec:
           responses:
             '200':
               description: Application deleted
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: auth0-tenant
+  description: Auth0 Tenant Configuration
+  annotations:
+    auth0.com/tenant-name: dev-a0e8fgdagji16lue  # ✅ Add tenant info
+spec:
+  type: auth0-instance
+  lifecycle: production
+  owner: platform-team
+  system: authentication
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: authentication
+  description: Authentication and Authorization System
+spec:
+  owner: platform-team
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform-team
+  description: Platform Engineering Team
+spec:
+  type: team
+  children: []
