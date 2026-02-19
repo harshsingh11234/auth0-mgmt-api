@@ -1,12 +1,11 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: auth0-management-api
+  name: auth0-mgmt-api
   description: Auth0 Management API service for managing applications and authentication
   annotations:
-    github.com/project-slug: https://github.com/harshsingh11234/auth0-mgmt-api  # ✅ Update with actual org/repo
+    github.com/project-slug: harshsingh11234/auth0-mgmt-api
     backstage.io/techdocs-ref: dir:.
-    backstage.io/source-location: url:https://github.com/harshsingh11234/auth0-mgmt-api/  # ✅ Add this
   tags:
     - auth0
     - authentication
@@ -14,21 +13,21 @@ metadata:
     - nodejs
     - api
   links:
-    - url: https://dev-a0e8fgdagji16lue.us.auth0.com/api/v2/ # ✅ Update with actual URL
-      title: Production API
+    - url: http://localhost:3000
+      title: Local Development API
       icon: web
-    - url: https://auth0.com/docs/api/management/v2
-      title: Auth0 Management API Docs
-      icon: docs
+    - url: https://github.com/harshsingh11234/auth0-mgmt-api/
+      title: GitHub Repository
+      icon: github
 spec:
   type: service
   lifecycle: production
-  owner: platform-team
-  system: authentication
+  owner: user:default/guest  # ✅ Use default guest user
+  # system: authentication    # ❌ Remove this line
   providesApis:
     - auth0-management
-  dependsOn:
-    - resource:default/auth0-tenant  # ✅ Better to specify namespace
+  # dependsOn:                # ❌ Remove dependencies
+  #   - resource:default/auth0-tenant
 
 ---
 apiVersion: backstage.io/v1alpha1
@@ -36,124 +35,26 @@ kind: API
 metadata:
   name: auth0-management
   description: REST API for Auth0 management operations
-  annotations:
-    backstage.io/definition-at-location: url:https://github.com/myorg/auth0-management-api/blob/main/openapi.yaml  # ✅ Optional: link to actual OpenAPI spec
 spec:
   type: openapi
   lifecycle: production
-  owner: platform-team
-  system: authentication
+  owner: user:default/guest  # ✅ Use default guest user
+  # system: authentication    # ❌ Remove this line
   definition: |
     openapi: 3.0.0
     info:
       title: Auth0 Management API
       version: 1.0.0
-      description: API for managing Auth0 applications and authentication
-    servers:  # ✅ Add servers
-      - url: https://dev-a0e8fgdagji16lue.us.auth0.com/api/v2/
-        description: Production server
     paths:
       /api/auth0/token:
         get:
           summary: Get Bearer Token
-          description: Retrieves a bearer token for Auth0 API authentication
           responses:
             '200':
               description: Successful response
-              content:  # ✅ Add response schema
-                application/json:
-                  schema:
-                    type: object
-                    properties:
-                      access_token:
-                        type: string
-                      token_type:
-                        type: string
       /api/auth0/applications:
         get:
           summary: List all applications
           responses:
             '200':
               description: Successful response
-        post:
-          summary: Create new application
-          requestBody:  # ✅ Add request body
-            required: true
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-          responses:
-            '201':
-              description: Application created
-      /api/auth0/applications/{clientId}:
-        get:
-          summary: Get application by ID
-          parameters:
-            - name: clientId
-              in: path
-              required: true
-              schema:
-                type: string
-          responses:
-            '200':
-              description: Successful response
-        patch:
-          summary: Update application
-          parameters:
-            - name: clientId
-              in: path
-              required: true
-              schema:
-                type: string
-          responses:
-            '200':
-              description: Application updated
-        delete:
-          summary: Delete application
-          parameters:
-            - name: clientId
-              in: path
-              required: true
-              schema:
-                type: string
-          responses:
-            '200':
-              description: Application deleted
-
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
-  name: auth0-tenant
-  description: Auth0 Tenant Configuration
-  annotations:
-    auth0.com/tenant-name: dev-a0e8fgdagji16lue  # ✅ Add tenant info
-spec:
-  type: auth0-instance
-  lifecycle: production
-  owner: platform-team
-  system: authentication
-
----
-apiVersion: backstage.io/v1alpha1
-kind: System
-metadata:
-  name: authentication
-  description: Authentication and Authorization System
-spec:
-  owner: platform-team
-
----
-apiVersion: backstage.io/v1alpha1
-kind: Group
-metadata:
-  name: platform-team
-  description: Platform Engineering Team
-spec:
-  type: team
-
-  children: []
