@@ -1,0 +1,231 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: auth0-mgmt-api
+  description: Auth0 Management API service for managing applications and authentication
+  annotations:
+    github.com/project-slug: harshsingh11234/auth0-mgmt-api
+    backstage.io/techdocs-ref: dir:.
+<<<<<<< HEAD
+    backstage.io/source-location: url:https://github.com/harshsingh11234/auth0-mgmt-api/
+=======
+>>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c
+  tags:
+    - auth0
+    - authentication
+    - management-api
+    - nodejs
+    - api
+  links:
+    - url: http://localhost:3000
+<<<<<<< HEAD
+      title: Local API
+      icon: web
+    - url: https://dev-a0e8fgdagji16lue.us.auth0.com/
+      title: Auth0 Tenant
+      icon: cloud
+    - url: https://auth0.com/docs/api/management/v2
+      title: Auth0 Management API Docs
+      icon: docs
+    - url: https://github.com/harshsingh11234/auth0-mgmt-api
+=======
+      title: Local Development API
+      icon: web
+    - url: https://github.com/harshsingh11234/auth0-mgmt-api/
+>>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c
+      title: GitHub Repository
+      icon: github
+spec:
+  type: service
+  lifecycle: production
+  owner: user:default/guest  # ✅ Use default guest user
+  # system: authentication    # ❌ Remove this line
+  providesApis:
+    - auth0-management
+<<<<<<< HEAD
+  dependsOn:
+    - resource:default/auth0-tenant
+=======
+  # dependsOn:                # ❌ Remove dependencies
+  #   - resource:default/auth0-tenant
+>>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: auth0-management
+  description: REST API for Auth0 management operations
+<<<<<<< HEAD
+  annotations:
+    backstage.io/definition-at-location: url:https://github.com/harshsingh11234/auth0-mgmt-api/blob/main/openapi.yaml
+=======
+>>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c
+spec:
+  type: openapi
+  lifecycle: production
+  owner: user:default/guest  # ✅ Use default guest user
+  # system: authentication    # ❌ Remove this line
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Auth0 Management API
+      version: 1.0.0
+<<<<<<< HEAD
+      description: API for managing Auth0 applications and authentication
+    servers:
+      - url: http://localhost:3000/api/auth0
+        description: Local Development Server
+      - url: https://dev-a0e8fgdagji16lue.us.auth0.com/api/v2
+        description: Auth0 Management API
+=======
+>>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c
+    paths:
+      /token:
+        get:
+          summary: Get Bearer Token
+          responses:
+            '200':
+              description: Successful response
+<<<<<<< HEAD
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                      token_type:
+                        type: string
+      /applications:
+=======
+      /api/auth0/applications:
+>>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c
+        get:
+          summary: List all applications
+          responses:
+            '200':
+              description: Successful response
+<<<<<<< HEAD
+              content:
+                application/json:
+                  schema:
+                    type: array
+                    items:
+                      type: object
+        post:
+          summary: Create new application
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Application name
+                    app_type:
+                      type: string
+                      enum: [regular_web, spa, native, non_interactive]
+                    callbacks:
+                      type: array
+                      items:
+                        type: string
+          responses:
+            '201':
+              description: Application created
+      /applications/{clientId}:
+        get:
+          summary: Get application by ID
+          parameters:
+            - name: clientId
+              in: path
+              required: true
+              schema:
+                type: string
+          responses:
+            '200':
+              description: Successful response
+        patch:
+          summary: Update application
+          parameters:
+            - name: clientId
+              in: path
+              required: true
+              schema:
+                type: string
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+          responses:
+            '200':
+              description: Application updated
+        delete:
+          summary: Delete application
+          parameters:
+            - name: clientId
+              in: path
+              required: true
+              schema:
+                type: string
+          responses:
+            '200':
+              description: Application deleted
+      /users:
+        get:
+          summary: List all users
+          responses:
+            '200':
+              description: Successful response
+      /roles:
+        get:
+          summary: List all roles
+          responses:
+            '200':
+              description: Successful response
+      /connections:
+        get:
+          summary: List all connections
+          responses:
+            '200':
+              description: Successful response
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: auth0-tenant
+  description: Auth0 Tenant Configuration
+  annotations:
+    auth0.com/tenant-name: dev-a0e8fgdagji16lue
+    auth0.com/tenant-url: https://dev-a0e8fgdagji16lue.us.auth0.com
+spec:
+  type: auth0-instance
+  lifecycle: production
+  owner: platform-team
+  system: authentication
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: authentication
+  description: Authentication and Authorization System
+spec:
+  owner: platform-team
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform-team
+  description: Platform Engineering Team
+spec:
+  type: team
+  children: []
+=======
+>>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c

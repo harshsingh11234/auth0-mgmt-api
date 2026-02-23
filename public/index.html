@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth0 Management API - Test UI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card h3 {
+            font-size: 36px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .stat-card p {
+            font-size: 14px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button.danger {
+            background: #e74c3c;
+        }
+        
+        button.danger:hover {
+            background: #c0392b;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        button.success {
+            background: #27ae60;
+        }
+        
+        button.success:hover {
+            background: #229954;
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background: #fee;
+            border: 1px solid #fcc;
+            border-left: 4px solid #e74c3c;
+            color: #c33;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-left: 4px solid #27ae60;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .response {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            max-height: 600px;
+            overflow: auto;
+        }
+        
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .endpoint-info {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .endpoint-info code {
+            background: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            color: #333;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .badge.online {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .badge.offline {
+            background: #fee;
+            color: #c33;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            🔐 Auth0 Management API
+            <span class="badge online" id="statusBadge">Online</span>
+        </h1>
+        <p class="subtitle">Test and manage your Auth0 resources</p>
+        
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-card">
+                <h3 id="appCount">-</h3>
+                <p>Applications</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="userCount">-</h3>
+                <p>Users</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="roleCount">-</h3>
+                <p>Roles</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="connectionCount">-</h3>
+                <p>Connections</p>
+            </div>
+        </div>
+        
+        <div class="endpoint-info">
+            <strong>API Base URL:</strong> <code id="apiBaseUrl">http://localhost:3000/api/auth0</code>
+        </div>
+        
+        <div class="section-title">🧪 Quick Tests</div>
+        <div class="controls">
+            <button onclick="testHealth()">
+                🏥 Health Check
+            </button>
+            <button onclick="getToken()">
+                🔑 Get Token
+            </button>
+            <button onclick="getApplications()">
+                📱 Get Applications
+            </button>
+            <button onclick="getUsers()">
+                👥 Get Users
+            </button>
+            <button onclick="getRoles()">
+                🎭 Get Roles
+            </button>
+            <button onclick="getConnections()">
+                🔗 Get Connections
+            </button>
+        </div>
+        
+        <div class="section-title">⚙️ Actions</div>
+        <div class="controls">
+            <button class="success" onclick="openCreateAppModal()">
+                ➕ Create Application
+            </button>
+            <button class="success" onclick="loadDashboard()">
+                📊 Load Dashboard
+            </button>
+            <button class="danger" onclick="clearResponse()">
+                🗑️ Clear Output
+            </button>
+        </div>
+        
+        <div id="successMessage" class="success" style="display: none;"></div>
+        <div id="error" class="error" style="display: none;"></div>
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            Loading...
+        </div>
+        <div id="response" class="response"></div>
+    </div>
+    
+    <!-- Create Application Modal -->
+    <div id="createAppModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Application</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="appName">Application Name *</label>
+                <input type="text" id="appName" placeholder="My Awesome App">
+            </div>
+            <div class="form-group">
+                <label for="appType">Application Type *</label>
+                <select id="appType" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                    <option value="regular_web">Regular Web Application</option>
+                    <option value="spa">Single Page Application</option>
+                    <option value="native">Native Application</option>
+                    <option value="non_interactive">Machine to Machine</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="appCallbacks">Callback URLs (one per line)</label>
+                <textarea id="appCallbacks" placeholder="http://localhost:3000/callback&#10;https://myapp.com/callback"></textarea>
+            </div>
+            <div class="controls">
+                <button class="success" onclick="createApplication()">
+                    ✅ Create Application
+                </button>
+                <button onclick="closeModal()">
+                    ❌ Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000';
+        
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('response').innerHTML = '';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = '❌ ' + message;
+            errorDiv.style.display = 'block';
+            hideLoading();
+        }
+        
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = '✅ ' + message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showResponse(data, title = '') {
+            const responseDiv = document.getElementById('response');
+            let html = '';
+            if (title) {
+                html += `<h3 style="margin-bottom: 15px; color: #667eea;">${title}</h3>`;
+            }
+            html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            responseDiv.innerHTML = html;
+            hideLoading();
+        }
+        
+        function updateStats(applications, users, roles, connections) {
+            const statsDiv = document.getElementById('stats');
+            statsDiv.style.display = 'grid';
+            
+            if (applications !== undefined) {
+                document.getElementById('appCount').textContent = applications;
+            }
+            if (users !== undefined) {
+                document.getElementById('userCount').textContent = users;
+            }
+            if (roles !== undefined) {
+                document.getElementById('roleCount').textContent = roles;
+            }
+            if (connections !== undefined) {
+                document.getElementById('connectionCount').textContent = connections;
+            }
+        }
+        
+        async function makeRequest(endpoint, method = 'GET', body = null) {
+            showLoading();
+            
+            try {
+                const options = {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+                
+                if (body) {
+                    options.body = JSON.stringify(body);
+                }
+                
+                const response = await fetch(`${API_BASE}${endpoint}`, options);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || data.details || `HTTP ${response.status}`);
+                }
+                
+                return data;
+            } catch (error) {
+                showError(error.message);
+                throw error;
+            }
+        }
+        
+        async function testHealth() {
+            try {
+                const data = await makeRequest('/health');
+                showResponse(data, '🏥 Health Check');
+                document.getElementById('statusBadge').textContent = 'Online';
+                document.getElementById('statusBadge').className = 'badge online';
+            } catch (error) {
+                document.getElementById('statusBadge').textContent = 'Offline';
+                document.getElementById('statusBadge').className = 'badge offline';
+            }
+        }
+        
+        async function getToken() {
+            try {
+                const data = await makeRequest('/api/auth0/token');
+                showResponse(data, '🔑 Access Token');
+            } catch (error) {
+                // Error already handled
+            }
+        }
+        
+        async function getApplications() {
+            try {
+                const data = await makeRequest('/api/auth0/applications');
+                if (Array.isArray(data)) {
+                    updateStats(data.length, undefined, undefined, undefined);
+                    showResponse(data, `📱 Applications (${data.length})`);
+                } else {
+                    showResponse(data, '📱 Applications');
+                }
+            } catch (error) {
+                // Error already handled
+            }
+        }
+        
+        async function getUsers() {
+            try {
+                const data = await makeRequest('/api/auth0/users');
+                if (Array.isArray(data)) {
+                    updateStats(undefined, data.length, undefined, undefined);
+                    showResponse(data, `👥 Users (${data.length})`);
+                } else {
+                    showResponse(data, '👥 Users');
+                }
+            } catch (error) {
+                // Error already handled
+            }
+        }
+        
+        async function getRoles() {
+            try {
+                const data = await makeRequest('/api/auth0/roles');
+                if (Array.isArray(data)) {
+                    updateStats(undefined, undefined, data.length, undefined);
+                    showResponse(data, `🎭 Roles (${data.length})`);
+                } else {
+                    showResponse(data, '🎭 Roles');
+                }
+            } catch (error) {
+                // Error already handled
+            }
+        }
+        
+        async function getConnections() {
+            try {
+                const data = await makeRequest('/api/auth0/connections');
+                if (Array.isArray(data)) {
+                    updateStats(undefined, undefined, undefined, data.length);
+                    showResponse(data, `🔗 Connections (${data.length})`);
+                } else {
+                    showResponse(data, '🔗 Connections');
+                }
+            } catch (error) {
+                // Error already handled
+            }
+        }
+        
+        async function loadDashboard() {
+            showLoading();
+            document.getElementById('response').innerHTML = '<h3 style="color: #667eea; margin-bottom: 15px;">📊 Loading Dashboard...</h3>';
+            
+            try {
+                const [apps, users, roles, connections] = await Promise.all([
+                    makeRequest('/api/auth0/applications'),
+                    makeRequest('/api/auth0/users'),
+                    makeRequest('/api/auth0/roles'),
+                    makeRequest('/api/auth0/connections')
+                ]);
+                
+                updateStats(
+                    Array.isArray(apps) ? apps.length : 0,
+                    Array.isArray(users) ? users.length : 0,
+                    Array.isArray(roles) ? roles.length : 0,
+                    Array.isArray(connections) ? connections.length : 0
+                );
+                
+                showResponse({
+                    applications: apps,
+                    users: users,
+                    roles: roles,
+                    connections: connections
+                }, '📊 Complete Dashboard');
+                
+                showSuccess('Dashboard loaded successfully!');
+            } catch (error) {
+                // Error already handled
+            }
+        }
+        
+        function openCreateAppModal() {
+            document.getElementById('createAppModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('createAppModal').classList.remove('active');
+        }
+        
+        async function createApplication() {
+            const name = document.getElementById('appName').value;
+            const appType = document.getElementById('appType').value;
+            const callbacks = document.getElementById('appCallbacks').value
+                .split('\n')
+                .map(url => url.trim())
+                .filter(url => url.length > 0);
+            
+            if (!name) {
+                alert('Please enter an application name');
+                return;
+            }
+            
+            const applicationData = {
+                name: name,
+                app_type: appType
+            };
+            
+            if (callbacks.length > 0) {
+                applicationData.callbacks = callbacks;
+            }
+            
+            try {
+                const data = await makeRequest('/api/auth0/applications', 'POST', applicationData);
+                showResponse(data, '✅ Application Created Successfully');
+                showSuccess(`Application "${name}" created successfully!`);
+                closeModal();
+                
+                // Clear form
+                document.getElementById('appName').value = '';
+                document.getElementById('appCallbacks').value = '';
+                
+                // Refresh applications list
+                setTimeout(() => getApplications(), 1000);
+            } catch (error) {
+                // Error already handled
+            }
+        }
+        
+        function clearResponse() {
+            document.getElementById('response').innerHTML = '';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('createAppModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        
+        // Test health on load
+        window.addEventListener('load', () => {
+            testHealth();
+        });
+    </script>
+</body>
+</html>
