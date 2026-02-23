@@ -32,8 +32,6 @@ spec:
   owner: user:default/guest
   providesApis:
     - auth0-management
-  dependsOn:
-    - resource:default/auth0-tenant
 
 ---
 apiVersion: backstage.io/v1alpha1
@@ -80,31 +78,8 @@ spec:
           responses:
             '200':
               description: Successful response
-              content:
-                application/json:
-                  schema:
-                    type: array
-                    items:
-                      type: object
         post:
           summary: Create new application
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      description: Application name
-                    app_type:
-                      type: string
-                      enum: [regular_web, spa, native, non_interactive]
-                    callbacks:
-                      type: array
-                      items:
-                        type: string
           responses:
             '201':
               description: Application created
@@ -128,12 +103,6 @@ spec:
               required: true
               schema:
                 type: string
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema:
-                  type: object
           responses:
             '200':
               description: Application updated
@@ -180,23 +149,3 @@ spec:
   type: auth0-instance
   lifecycle: production
   owner: user:default/guest
-  system: authentication
-
----
-apiVersion: backstage.io/v1alpha1
-kind: System
-metadata:
-  name: authentication
-  description: Authentication and Authorization System
-spec:
-  owner: user:default/guest
-
----
-apiVersion: backstage.io/v1alpha1
-kind: Group
-metadata:
-  name: platform-team
-  description: Platform Engineering Team
-spec:
-  type: team
-  children: []
