@@ -6,10 +6,7 @@ metadata:
   annotations:
     github.com/project-slug: harshsingh11234/auth0-mgmt-api
     backstage.io/techdocs-ref: dir:.
-<<<<<<< HEAD
     backstage.io/source-location: url:https://github.com/harshsingh11234/auth0-mgmt-api/
-=======
->>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c
   tags:
     - auth0
     - authentication
@@ -18,7 +15,6 @@ metadata:
     - api
   links:
     - url: http://localhost:3000
-<<<<<<< HEAD
       title: Local API
       icon: web
     - url: https://dev-a0e8fgdagji16lue.us.auth0.com/
@@ -28,27 +24,16 @@ metadata:
       title: Auth0 Management API Docs
       icon: docs
     - url: https://github.com/harshsingh11234/auth0-mgmt-api
-=======
-      title: Local Development API
-      icon: web
-    - url: https://github.com/harshsingh11234/auth0-mgmt-api/
->>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c
       title: GitHub Repository
       icon: github
 spec:
   type: service
   lifecycle: production
-  owner: user:default/guest  # ✅ Use default guest user
-  # system: authentication    # ❌ Remove this line
+  owner: user:default/guest
   providesApis:
     - auth0-management
-<<<<<<< HEAD
   dependsOn:
     - resource:default/auth0-tenant
-=======
-  # dependsOn:                # ❌ Remove dependencies
-  #   - resource:default/auth0-tenant
->>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c
 
 ---
 apiVersion: backstage.io/v1alpha1
@@ -56,30 +41,23 @@ kind: API
 metadata:
   name: auth0-management
   description: REST API for Auth0 management operations
-<<<<<<< HEAD
   annotations:
-    backstage.io/definition-at-location: url:https://github.com/harshsingh11234/auth0-mgmt-api/blob/main/openapi.yaml
-=======
->>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c
+    backstage.io/definition-at-location: url:https://github.com/harshsingh11234/auth0-mgmt-api/blob/master/openapi.yaml
 spec:
   type: openapi
   lifecycle: production
-  owner: user:default/guest  # ✅ Use default guest user
-  # system: authentication    # ❌ Remove this line
+  owner: user:default/guest
   definition: |
     openapi: 3.0.0
     info:
       title: Auth0 Management API
       version: 1.0.0
-<<<<<<< HEAD
       description: API for managing Auth0 applications and authentication
     servers:
       - url: http://localhost:3000/api/auth0
         description: Local Development Server
       - url: https://dev-a0e8fgdagji16lue.us.auth0.com/api/v2
         description: Auth0 Management API
-=======
->>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c
     paths:
       /token:
         get:
@@ -87,7 +65,6 @@ spec:
           responses:
             '200':
               description: Successful response
-<<<<<<< HEAD
               content:
                 application/json:
                   schema:
@@ -98,15 +75,11 @@ spec:
                       token_type:
                         type: string
       /applications:
-=======
-      /api/auth0/applications:
->>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c
         get:
           summary: List all applications
           responses:
             '200':
               description: Successful response
-<<<<<<< HEAD
               content:
                 application/json:
                   schema:
@@ -206,7 +179,7 @@ metadata:
 spec:
   type: auth0-instance
   lifecycle: production
-  owner: platform-team
+  owner: user:default/guest
   system: authentication
 
 ---
@@ -216,7 +189,7 @@ metadata:
   name: authentication
   description: Authentication and Authorization System
 spec:
-  owner: platform-team
+  owner: user:default/guest
 
 ---
 apiVersion: backstage.io/v1alpha1
@@ -227,5 +200,3 @@ metadata:
 spec:
   type: team
   children: []
-=======
->>>>>>> eb83dad1932695cc2a31c3e338d7a87f9bea771c
