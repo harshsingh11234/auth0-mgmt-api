@@ -14,7 +14,7 @@ metadata:
     - nodejs
     - api
   links:
-    - url: http://localhost:3000
+    - url: http://localhost:3001
       title: Local API
       icon: web
     - url: https://dev-a0e8fgdagji16lue.us.auth0.com/
@@ -52,7 +52,7 @@ spec:
       version: 1.0.0
       description: API for managing Auth0 applications and authentication
     servers:
-      - url: http://localhost:3000/api/auth0
+      - url: http://localhost:3001/api/auth0
         description: Local Development Server
       - url: https://dev-a0e8fgdagji16lue.us.auth0.com/api/v2
         description: Auth0 Management API
@@ -149,3 +149,4 @@ spec:
   type: auth0-instance
   lifecycle: production
   owner: user:default/guest
+
