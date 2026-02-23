@@ -51,5 +51,4 @@ app.listen(PORT, () => {
   console.log(`🔧 API Base URL: http://localhost:${PORT}/api/auth0`);
 });
 
-
 module.exports = app;
