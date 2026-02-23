@@ -343,7 +343,7 @@
         </div>
         
         <div class="endpoint-info">
-            <strong>API Base URL:</strong> <code id="apiBaseUrl">http://localhost:3000/api/auth0</code>
+            <strong>API Base URL:</strong> <code id="apiBaseUrl">http://localhost:3001/api/auth0</code>
         </div>
         
         <div class="section-title">🧪 Quick Tests</div>
@@ -412,7 +412,7 @@
             </div>
             <div class="form-group">
                 <label for="appCallbacks">Callback URLs (one per line)</label>
-                <textarea id="appCallbacks" placeholder="http://localhost:3000/callback&#10;https://myapp.com/callback"></textarea>
+                <textarea id="appCallbacks" placeholder="http://localhost:3001/callback&#10;https://myapp.com/callback"></textarea>
             </div>
             <div class="controls">
                 <button class="success" onclick="createApplication()">
@@ -426,7 +426,7 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:3000';
+        const API_BASE = 'http://localhost:3001';
         
         function showLoading() {
             document.getElementById('loading').style.display = 'block';
