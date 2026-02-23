@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auth0 Management API - Test UI</title>
+    <title>Alter Domus Auth0 Developer API</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
@@ -12,133 +14,405 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 30px 20px;
+            color: #1a1a1a;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background elements */
+        .bg-decoration {
+            position: fixed;
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .bg-decoration:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background: white;
+            top: -100px;
+            right: -100px;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .bg-decoration:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            background: white;
+            bottom: -50px;
+            left: -50px;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
         }
         
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
         }
         
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
+        .header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: slideDown 0.6s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 20px;
+            margin-bottom: 16px;
+        }
+        
+        .logo-box {
+            background: linear-gradient(135deg, #0052cc 0%, #003d99 100%);
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: -1px;
+            box-shadow: 0 8px 24px rgba(0,82,204,0.3);
+            animation: pulse-logo 3s infinite;
+        }
+        
+        @keyframes pulse-logo {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .brand-text h1 {
+            color: #1a1a1a;
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+        
+        .brand-text .company {
+            background: linear-gradient(135deg, #0052cc 0%, #667eea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .subtitle {
             color: #666;
-            margin-bottom: 30px;
+            font-size: 15px;
+        }
+        
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2da44e;
+            box-shadow: 0 0 0 4px rgba(45, 164, 78, 0.2);
+            animation: pulse-dot 2s infinite;
+        }
+        
+        .status-dot.offline {
+            background: #cf222e;
+            box-shadow: 0 0 0 4px rgba(207, 34, 46, 0.2);
+            animation: none;
+        }
+        
+        @keyframes pulse-dot {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 4px rgba(45, 164, 78, 0.2);
+            }
+            50% { 
+                transform: scale(1.1);
+                box-shadow: 0 0 0 8px rgba(45, 164, 78, 0.1);
+            }
+        }
+        
+        .endpoint-badge {
+            background: linear-gradient(135deg, #f6f8fa 0%, #e1e4e8 100%);
+            border: 1px solid #d0d7de;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-family: 'SF Mono', Monaco, Consolas, monospace;
+            color: #1a1a1a;
+            font-weight: 600;
         }
         
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            gap: 20px;
             margin-bottom: 30px;
         }
         
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 30px;
+            border-radius: 16px;
             text-align: center;
-            transition: transform 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+        
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .stat-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+            border-color: rgba(102, 126, 234, 0.3);
         }
         
         .stat-card h3 {
-            font-size: 36px;
-            margin-bottom: 5px;
+            font-size: 48px;
+            margin-bottom: 8px;
             font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: countUp 1s ease-out;
+        }
+        
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
         
         .stat-card p {
-            font-size: 14px;
-            opacity: 0.9;
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
         }
         
         .controls {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 12px;
         }
         
         button {
-            background: #667eea;
-            color: white;
-            border: none;
+            background: white;
+            color: #1a1a1a;
+            border: 2px solid #e1e4e8;
             padding: 14px 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
         
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
         button:hover {
-            background: #5568d3;
+            border-color: #667eea;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
         }
         
         button:active {
             transform: translateY(0);
         }
         
-        button.danger {
-            background: #e74c3c;
+        button span {
+            position: relative;
+            z-index: 1;
         }
         
-        button.danger:hover {
-            background: #c0392b;
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        button.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        
+        button.primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 28px rgba(102, 126, 234, 0.4);
         }
         
         button.success {
-            background: #27ae60;
+            background: linear-gradient(135deg, #2da44e 0%, #1a7f37 100%);
+            color: white;
+            border: none;
         }
         
         button.success:hover {
-            background: #229954;
-            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 28px rgba(45, 164, 78, 0.4);
+        }
+        
+        button.danger {
+            background: linear-gradient(135deg, #cf222e 0%, #a0111e 100%);
+            color: white;
+            border: none;
+        }
+        
+        button.danger:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 28px rgba(207, 34, 46, 0.4);
+        }
+        
+        button.outline-danger {
+            background: white;
+            color: #cf222e;
+            border-color: #ffccd5;
+        }
+        
+        button.outline-danger:hover {
+            background: #ffebe9;
+            border-color: #cf222e;
+            box-shadow: 0 8px 20px rgba(207, 34, 46, 0.15);
         }
         
         .loading {
             text-align: center;
-            padding: 20px;
+            padding: 60px 20px;
             color: #666;
-            font-size: 16px;
+            font-size: 15px;
         }
         
         .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
+            border: 4px solid rgba(102, 126, 234, 0.1);
+            border-top: 4px solid #667eea;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            margin: 0 auto 20px;
         }
         
         @keyframes spin {
@@ -147,96 +421,231 @@
         }
         
         .error {
-            background: #fee;
-            border: 1px solid #fcc;
-            border-left: 4px solid #e74c3c;
-            color: #c33;
-            padding: 15px;
-            border-radius: 6px;
+            background: linear-gradient(135deg, #ffebe9 0%, #ffd7d5 100%);
+            border: 1px solid #ff8182;
+            border-left: 4px solid #cf222e;
+            color: #82071e;
+            padding: 18px 20px;
+            border-radius: 12px;
             margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            animation: shake 0.5s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
         
         .success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            border-left: 4px solid #27ae60;
-            color: #155724;
-            padding: 15px;
-            border-radius: 6px;
+            background: linear-gradient(135deg, #dafbe1 0%, #c3f6d0 100%);
+            border: 1px solid #a3e6b3;
+            border-left: 4px solid #2da44e;
+            color: #1a7f37;
+            padding: 18px 20px;
+            border-radius: 12px;
             margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            animation: slideInRight 0.5s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
         
         .response {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 20px;
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 12px;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            animation: expandIn 0.4s ease-out;
+        }
+        
+        @keyframes expandIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .response-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 24px;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .response-body {
+            padding: 24px;
             max-height: 600px;
             overflow: auto;
+        }
+        
+        .response-body::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .response-body::-webkit-scrollbar-track {
+            background: #f6f8fa;
+        }
+        
+        .response-body::-webkit-scrollbar-thumb {
+            background: #d0d7de;
+            border-radius: 4px;
+        }
+        
+        .response-body::-webkit-scrollbar-thumb:hover {
+            background: #afb8c1;
         }
         
         pre {
             margin: 0;
             white-space: pre-wrap;
             word-wrap: break-word;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-family: 'SF Mono', Monaco, Consolas, monospace;
             font-size: 13px;
-            line-height: 1.6;
+            line-height: 1.8;
+            color: #24292f;
         }
         
-        .endpoint-info {
-            background: #e7f3ff;
-            border-left: 4px solid #2196F3;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
+        /* Application List Styles */
+        .app-list {
+            display: grid;
+            gap: 16px;
         }
         
-        .endpoint-info code {
-            background: #fff;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-family: monospace;
-            color: #667eea;
-            font-weight: 600;
-        }
-        
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin: 30px 0 15px 0;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e9ecef;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-            background: #f8f9fa;
+        .app-card {
+            background: #f6f8fa;
+            border: 2px solid #e1e4e8;
+            border-radius: 12px;
             padding: 20px;
-            border-radius: 8px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.4s ease-out backwards;
         }
         
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
+        .app-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+            transform: translateX(4px);
+        }
+        
+        .app-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 16px;
+        }
+        
+        .app-card-title {
+            flex: 1;
+        }
+        
+        .app-card-title h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+            word-break: break-word;
+        }
+        
+        .app-type-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 600;
-            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: inherit;
+        .app-type-badge.spa {
+            background: #e3f2fd;
+            color: #1976d2;
         }
         
-        .form-group textarea {
-            min-height: 100px;
-            font-family: 'Monaco', 'Menlo', monospace;
+        .app-type-badge.regular_web {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .app-type-badge.native {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        .app-type-badge.non_interactive {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .app-card-info {
+            display: grid;
+            gap: 8px;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        
+        .app-card-info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .app-card-info-item strong {
+            color: #24292f;
+            min-width: 80px;
+        }
+        
+        .app-card-info-item code {
+            background: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, Consolas, monospace;
+            font-size: 12px;
+            color: #667eea;
+            border: 1px solid #e1e4e8;
+        }
+        
+        .app-card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e1e4e8;
+        }
+        
+        .app-card-actions button {
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 13px;
         }
         
         .modal {
@@ -247,9 +656,11 @@
             right: 0;
             bottom: 0;
             background: rgba(0,0,0,0.7);
-            z-index: 1000;
+            z-index: 2000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease-out;
         }
         
         .modal.active {
@@ -258,168 +669,392 @@
         
         .modal-content {
             background: white;
-            padding: 30px;
-            border-radius: 12px;
+            padding: 40px;
+            border-radius: 20px;
             max-width: 600px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
         
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e1e4e8;
         }
         
         .modal-header h2 {
             margin: 0;
-            color: #333;
+            color: #1a1a1a;
+            font-size: 24px;
+            font-weight: 700;
         }
         
         .close-btn {
-            background: none;
+            background: #f6f8fa;
             border: none;
-            font-size: 28px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
             cursor: pointer;
-            color: #999;
-            padding: 0;
-            width: 30px;
-            height: 30px;
+            color: #57606a;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .close-btn:hover {
-            color: #333;
-            transform: none;
-            box-shadow: none;
+            background: #e1e4e8;
+            color: #24292f;
+            transform: rotate(90deg);
         }
         
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
+        .form-group {
+            margin-bottom: 24px;
+            animation: slideUp 0.4s ease-out backwards;
+        }
+        
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
             font-weight: 600;
-            margin-left: 10px;
+            color: #24292f;
+            font-size: 14px;
         }
         
-        .badge.online {
-            background: #d4edda;
-            color: #155724;
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #d0d7de;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: white;
         }
         
-        .badge.offline {
-            background: #fee;
-            color: #c33;
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: scale(1.01);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            font-family: 'SF Mono', Monaco, Consolas, monospace;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
+            margin-top: 32px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #666;
+        }
+        
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .empty-state h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #24292f;
+        }
+        
+        .empty-state p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* Tooltip effect */
+        [data-tooltip] {
+            position: relative;
+        }
+        
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: #24292f;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 1000;
+        }
+        
+        [data-tooltip]:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-4px);
+        }
+        
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.6s ease-out;
+            pointer-events: none;
+        }
+        
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .search-box {
+            margin-bottom: 20px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px 14px 45px;
+            border: 2px solid #e1e4e8;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>') no-repeat 15px center;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn-small {
+            padding: 8px 14px !important;
+            font-size: 12px !important;
         }
     </style>
 </head>
 <body>
+    <!-- Background decorations -->
+    <div class="bg-decoration"></div>
+    <div class="bg-decoration"></div>
+    
     <div class="container">
-        <h1>
-            🔐 Auth0 Management API
-            <span class="badge online" id="statusBadge">Online</span>
-        </h1>
-        <p class="subtitle">Test and manage your Auth0 resources</p>
+        <div class="header">
+            <div class="brand">
+                <div class="logo-box">AD</div>
+                <div class="brand-text">
+                    <h1><span class="company">Alter Domus</span> Auth0 Developer API</h1>
+                    <p class="subtitle">Enterprise authentication management platform</p>
+                </div>
+            </div>
+            <div class="status-bar">
+                <div class="status-indicator">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">Connected</span>
+                </div>
+                <div style="margin-left: auto;">
+                    <span class="endpoint-badge" id="apiBaseUrl">localhost:3001/api/auth0</span>
+                </div>
+            </div>
+        </div>
         
         <div class="stats" id="stats" style="display: none;">
-            <div class="stat-card">
-                <h3 id="appCount">-</h3>
-                <p>Applications</p>
+            <div class="stat-card" onclick="listApplications()" data-tooltip="Click to view applications">
+                <h3 id="appCount">0</h3>
+                <p>📱 Applications</p>
             </div>
-            <div class="stat-card">
-                <h3 id="userCount">-</h3>
-                <p>Users</p>
+            <div class="stat-card" onclick="getUsers()" data-tooltip="Click to view users">
+                <h3 id="userCount">0</h3>
+                <p>👥 Users</p>
             </div>
-            <div class="stat-card">
-                <h3 id="roleCount">-</h3>
-                <p>Roles</p>
+            <div class="stat-card" onclick="getRoles()" data-tooltip="Click to view roles">
+                <h3 id="roleCount">0</h3>
+                <p>🎭 Roles</p>
             </div>
-            <div class="stat-card">
-                <h3 id="connectionCount">-</h3>
-                <p>Connections</p>
+            <div class="stat-card" onclick="getConnections()" data-tooltip="Click to view connections">
+                <h3 id="connectionCount">0</h3>
+                <p>🔗 Connections</p>
             </div>
         </div>
         
-        <div class="endpoint-info">
-            <strong>API Base URL:</strong> <code id="apiBaseUrl">http://localhost:3001/api/auth0</code>
+        <div class="section">
+            <div class="section-title">Quick Operations</div>
+            <div class="controls">
+                <button onclick="testHealth()" data-tooltip="Check API health">
+                    <span>🏥 Health Check</span>
+                </button>
+                <button onclick="getToken()" data-tooltip="Retrieve access token">
+                    <span>🔑 Get Token</span>
+                </button>
+                <button onclick="getApplications()" data-tooltip="Get applications as JSON">
+                    <span>📱 Get Applications</span>
+                </button>
+                <button onclick="getUsers()" data-tooltip="List all users">
+                    <span>👥 Users</span>
+                </button>
+                <button onclick="getRoles()" data-tooltip="List all roles">
+                    <span>🎭 Roles</span>
+                </button>
+                <button onclick="getConnections()" data-tooltip="List all connections">
+                    <span>🔗 Connections</span>
+                </button>
+            </div>
         </div>
         
-        <div class="section-title">🧪 Quick Tests</div>
-        <div class="controls">
-            <button onclick="testHealth()">
-                🏥 Health Check
-            </button>
-            <button onclick="getToken()">
-                🔑 Get Token
-            </button>
-            <button onclick="getApplications()">
-                📱 Get Applications
-            </button>
-            <button onclick="getUsers()">
-                👥 Get Users
-            </button>
-            <button onclick="getRoles()">
-                🎭 Get Roles
-            </button>
-            <button onclick="getConnections()">
-                🔗 Get Connections
-            </button>
-        </div>
-        
-        <div class="section-title">⚙️ Actions</div>
-        <div class="controls">
-            <button class="success" onclick="openCreateAppModal()">
-                ➕ Create Application
-            </button>
-            <button class="success" onclick="loadDashboard()">
-                📊 Load Dashboard
-            </button>
-            <button class="danger" onclick="clearResponse()">
-                🗑️ Clear Output
-            </button>
+        <div class="section">
+            <div class="section-title">Management Actions</div>
+            <div class="controls">
+                <button class="primary" onclick="loadDashboard()" data-tooltip="Load complete overview">
+                    <span>📊 Load Full Dashboard</span>
+                </button>
+                <button class="primary" onclick="listApplications()" data-tooltip="View all apps with actions">
+                    <span>📋 List Applications</span>
+                </button>
+                <button class="success" onclick="openCreateAppModal()" data-tooltip="Create new application">
+                    <span>➕ Create Application</span>
+                </button>
+                <button class="outline-danger" onclick="clearResponse()" data-tooltip="Clear output">
+                    <span>🗑️ Clear Output</span>
+                </button>
+            </div>
         </div>
         
         <div id="successMessage" class="success" style="display: none;"></div>
         <div id="error" class="error" style="display: none;"></div>
         <div id="loading" class="loading" style="display: none;">
             <div class="spinner"></div>
-            Loading...
+            <div>Loading data from Auth0...</div>
         </div>
-        <div id="response" class="response"></div>
+        
+        <div id="responseContainer" style="display: none;">
+            <div class="response" id="response"></div>
+        </div>
+        
+        <div id="emptyState" class="section empty-state">
+            <div class="empty-state-icon">🚀</div>
+            <h3>Ready to Start</h3>
+            <p>Select an operation above to interact with Auth0 Management API</p>
+        </div>
     </div>
     
     <!-- Create Application Modal -->
     <div id="createAppModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Create New Application</h2>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
+                <h2>✨ Create New Application</h2>
+                <button class="close-btn" onclick="closeModal('createAppModal')">&times;</button>
             </div>
+            
             <div class="form-group">
                 <label for="appName">Application Name *</label>
-                <input type="text" id="appName" placeholder="My Awesome App">
+                <input type="text" id="appName" placeholder="e.g., My Web Application" autofocus>
             </div>
+            
             <div class="form-group">
                 <label for="appType">Application Type *</label>
-                <select id="appType" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
-                    <option value="regular_web">Regular Web Application</option>
-                    <option value="spa">Single Page Application</option>
-                    <option value="native">Native Application</option>
-                    <option value="non_interactive">Machine to Machine</option>
+                <select id="appType">
+                    <option value="regular_web">🌐 Regular Web Application</option>
+                    <option value="spa">⚡ Single Page Application</option>
+                    <option value="native">📱 Native Application</option>
+                    <option value="non_interactive">🤖 Machine to Machine</option>
                 </select>
             </div>
+            
             <div class="form-group">
-                <label for="appCallbacks">Callback URLs (one per line)</label>
+                <label for="appCallbacks">Callback URLs <span style="color: #666; font-weight: 400;">(optional, one per line)</span></label>
                 <textarea id="appCallbacks" placeholder="http://localhost:3001/callback&#10;https://myapp.com/callback"></textarea>
             </div>
-            <div class="controls">
+            
+            <div class="form-actions">
                 <button class="success" onclick="createApplication()">
-                    ✅ Create Application
+                    <span>✅ Create Application</span>
                 </button>
-                <button onclick="closeModal()">
-                    ❌ Cancel
+                <button onclick="closeModal('createAppModal')">
+                    <span>Cancel</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>⚠️ Confirm Deletion</h2>
+                <button class="close-btn" onclick="closeModal('deleteModal')">&times;</button>
+            </div>
+            
+            <div style="margin-bottom: 24px;">
+                <p style="font-size: 15px; color: #666; line-height: 1.6;">
+                    Are you sure you want to delete the application <strong id="deleteAppName" style="color: #cf222e;"></strong>?
+                </p>
+                <p style="font-size: 13px; color: #999; margin-top: 12px;">
+                    This action cannot be undone.
+                </p>
+            </div>
+            
+            <div class="form-actions">
+                <button class="danger" onclick="confirmDelete()">
+                    <span>🗑️ Yes, Delete Application</span>
+                </button>
+                <button onclick="closeModal('deleteModal')">
+                    <span>Cancel</span>
                 </button>
             </div>
         </div>
@@ -427,10 +1062,35 @@
 
     <script>
         const API_BASE = 'http://localhost:3001';
+        let currentData = null;
+        let deleteAppId = null;
+        
+        // Add ripple effect to buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                const button = e.target.tagName === 'BUTTON' ? e.target : e.target.closest('button');
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                button.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            }
+        });
         
         function showLoading() {
             document.getElementById('loading').style.display = 'block';
-            document.getElementById('response').innerHTML = '';
+            document.getElementById('responseContainer').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'none';
             document.getElementById('error').style.display = 'none';
             document.getElementById('successMessage').style.display = 'none';
         }
@@ -441,29 +1101,166 @@
         
         function showError(message) {
             const errorDiv = document.getElementById('error');
-            errorDiv.textContent = '❌ ' + message;
-            errorDiv.style.display = 'block';
+            errorDiv.innerHTML = '<strong>❌ Error:</strong> ' + message;
+            errorDiv.style.display = 'flex';
+            document.getElementById('emptyState').style.display = 'none';
             hideLoading();
         }
         
         function showSuccess(message) {
             const successDiv = document.getElementById('successMessage');
-            successDiv.textContent = '✅ ' + message;
-            successDiv.style.display = 'block';
+            successDiv.innerHTML = '<strong>✅ Success:</strong> ' + message;
+            successDiv.style.display = 'flex';
             setTimeout(() => {
                 successDiv.style.display = 'none';
             }, 5000);
         }
         
-        function showResponse(data, title = '') {
+        function showResponse(data, title = '', icon = '📄') {
+            const responseContainer = document.getElementById('responseContainer');
             const responseDiv = document.getElementById('response');
-            let html = '';
-            if (title) {
-                html += `<h3 style="margin-bottom: 15px; color: #667eea;">${title}</h3>`;
-            }
-            html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            
+            document.getElementById('emptyState').style.display = 'none';
+            responseContainer.style.display = 'block';
+            
+            currentData = data;
+            
+            let html = `
+                <div class="response-header">
+                    <span>${icon} ${title}</span>
+                    <span style="font-size: 12px; opacity: 0.9;">${new Date().toLocaleTimeString()}</span>
+                </div>
+                <div class="response-body">
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                </div>
+            `;
+            
             responseDiv.innerHTML = html;
             hideLoading();
+        }
+        
+        function showAppList(apps, title = '') {
+            const responseContainer = document.getElementById('responseContainer');
+            const responseDiv = document.getElementById('response');
+            
+            document.getElementById('emptyState').style.display = 'none';
+            responseContainer.style.display = 'block';
+            
+            if (!Array.isArray(apps) || apps.length === 0) {
+                responseDiv.innerHTML = `
+                    <div class="response-header">
+                        <span>📱 ${title}</span>
+                        <span style="font-size: 12px; opacity: 0.9;">${new Date().toLocaleTimeString()}</span>
+                    </div>
+                    <div class="response-body">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📱</div>
+                            <h3>No Applications Found</h3>
+                            <p>Create your first application to get started</p>
+                        </div>
+                    </div>
+                `;
+                hideLoading();
+                return;
+            }
+            
+            let appCards = '';
+            apps.forEach((app, index) => {
+                const appType = app.app_type || 'unknown';
+                const clientId = app.client_id || 'N/A';
+                const createdAt = app.created_at ? new Date(app.created_at).toLocaleDateString() : 'N/A';
+                
+                appCards += `
+                    <div class="app-card" style="animation-delay: ${index * 0.1}s;">
+                        <div class="app-card-header">
+                            <div class="app-card-title">
+                                <h4>${app.name || 'Unnamed Application'}</h4>
+                                <span class="app-type-badge ${appType}">${formatAppType(appType)}</span>
+                            </div>
+                        </div>
+                        <div class="app-card-info">
+                            <div class="app-card-info-item">
+                                <strong>Client ID:</strong>
+                                <code>${clientId}</code>
+                            </div>
+                            <div class="app-card-info-item">
+                                <strong>Created:</strong>
+                                <span>${createdAt}</span>
+                            </div>
+                            ${app.callbacks && app.callbacks.length > 0 ? `
+                            <div class="app-card-info-item">
+                                <strong>Callbacks:</strong>
+                                <span>${app.callbacks.length} configured</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        <div class="app-card-actions">
+                            <button class="primary btn-small" onclick="viewAppDetails('${clientId}')">
+                                <span>👁️ View Details</span>
+                            </button>
+                            <button class="danger btn-small" onclick="openDeleteModal('${clientId}', '${app.name.replace(/'/g, "\\'")}')">
+                                <span>🗑️ Delete</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            let html = `
+                <div class="response-header">
+                    <span>📱 ${title}</span>
+                    <span style="font-size: 12px; opacity: 0.9;">${new Date().toLocaleTimeString()}</span>
+                </div>
+                <div class="response-body">
+                    <div class="search-box">
+                        <input type="text" id="appSearch" placeholder="Search applications..." onkeyup="filterApps()">
+                    </div>
+                    <div class="app-list" id="appListContainer">
+                        ${appCards}
+                    </div>
+                </div>
+            `;
+            
+            responseDiv.innerHTML = html;
+            hideLoading();
+        }
+        
+        function formatAppType(type) {
+            const types = {
+                'spa': 'SPA',
+                'regular_web': 'Web App',
+                'native': 'Native',
+                'non_interactive': 'M2M'
+            };
+            return types[type] || type;
+        }
+        
+        function filterApps() {
+            const searchTerm = document.getElementById('appSearch').value.toLowerCase();
+            const appCards = document.querySelectorAll('.app-card');
+            
+            appCards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function animateCount(element, target) {
+            let current = 0;
+            const increment = target / 30;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 30);
         }
         
         function updateStats(applications, users, roles, connections) {
@@ -471,16 +1268,31 @@
             statsDiv.style.display = 'grid';
             
             if (applications !== undefined) {
-                document.getElementById('appCount').textContent = applications;
+                animateCount(document.getElementById('appCount'), applications);
             }
             if (users !== undefined) {
-                document.getElementById('userCount').textContent = users;
+                animateCount(document.getElementById('userCount'), users);
             }
             if (roles !== undefined) {
-                document.getElementById('roleCount').textContent = roles;
+                animateCount(document.getElementById('roleCount'), roles);
             }
             if (connections !== undefined) {
-                document.getElementById('connectionCount').textContent = connections;
+                animateCount(document.getElementById('connectionCount'), connections);
+            }
+        }
+        
+        function updateStatus(online) {
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            
+            if (online) {
+                statusDot.classList.remove('offline');
+                statusText.textContent = 'Connected';
+                statusText.style.color = '#2da44e';
+            } else {
+                statusDot.classList.add('offline');
+                statusText.textContent = 'Disconnected';
+                statusText.style.color = '#cf222e';
             }
         }
         
@@ -503,11 +1315,13 @@
                 const data = await response.json();
                 
                 if (!response.ok) {
-                    throw new Error(data.error || data.details || `HTTP ${response.status}`);
+                    throw new Error(data.error || data.details || data.message || `HTTP ${response.status}`);
                 }
                 
+                updateStatus(true);
                 return data;
             } catch (error) {
+                updateStatus(false);
                 showError(error.message);
                 throw error;
             }
@@ -516,19 +1330,18 @@
         async function testHealth() {
             try {
                 const data = await makeRequest('/health');
-                showResponse(data, '🏥 Health Check');
-                document.getElementById('statusBadge').textContent = 'Online';
-                document.getElementById('statusBadge').className = 'badge online';
+                showResponse(data, 'Health Check Status', '🏥');
+                showSuccess('API is healthy and responding normally');
             } catch (error) {
-                document.getElementById('statusBadge').textContent = 'Offline';
-                document.getElementById('statusBadge').className = 'badge offline';
+                // Error already handled
             }
         }
         
         async function getToken() {
             try {
                 const data = await makeRequest('/api/auth0/token');
-                showResponse(data, '🔑 Access Token');
+                showResponse(data, 'Access Token Retrieved', '🔑');
+                showSuccess('Authentication token retrieved successfully');
             } catch (error) {
                 // Error already handled
             }
@@ -539,10 +1352,39 @@
                 const data = await makeRequest('/api/auth0/applications');
                 if (Array.isArray(data)) {
                     updateStats(data.length, undefined, undefined, undefined);
-                    showResponse(data, `📱 Applications (${data.length})`);
+                    showResponse(data, `Applications (${data.length} found)`, '📱');
+                    if (data.length > 0) {
+                        showSuccess(`Found ${data.length} application(s)`);
+                    }
                 } else {
-                    showResponse(data, '📱 Applications');
+                    showResponse(data, 'Applications', '📱');
                 }
+            } catch (error) {
+                // Error already handled
+            }
+        }
+        
+        async function listApplications() {
+            try {
+                const data = await makeRequest('/api/auth0/applications');
+                if (Array.isArray(data)) {
+                    updateStats(data.length, undefined, undefined, undefined);
+                    showAppList(data, `Applications (${data.length} found)`);
+                    if (data.length > 0) {
+                        showSuccess(`Found ${data.length} application(s)`);
+                    }
+                } else {
+                    showAppList([], 'Applications');
+                }
+            } catch (error) {
+                // Error already handled
+            }
+        }
+        
+        async function viewAppDetails(clientId) {
+            try {
+                const data = await makeRequest(`/api/auth0/applications/${clientId}`);
+                showResponse(data, `Application Details: ${data.name || clientId}`, '📱');
             } catch (error) {
                 // Error already handled
             }
@@ -553,9 +1395,12 @@
                 const data = await makeRequest('/api/auth0/users');
                 if (Array.isArray(data)) {
                     updateStats(undefined, data.length, undefined, undefined);
-                    showResponse(data, `👥 Users (${data.length})`);
+                    showResponse(data, `Users (${data.length} found)`, '👥');
+                    if (data.length > 0) {
+                        showSuccess(`Found ${data.length} user(s)`);
+                    }
                 } else {
-                    showResponse(data, '👥 Users');
+                    showResponse(data, 'Users', '👥');
                 }
             } catch (error) {
                 // Error already handled
@@ -567,9 +1412,12 @@
                 const data = await makeRequest('/api/auth0/roles');
                 if (Array.isArray(data)) {
                     updateStats(undefined, undefined, data.length, undefined);
-                    showResponse(data, `🎭 Roles (${data.length})`);
+                    showResponse(data, `Roles (${data.length} found)`, '🎭');
+                    if (data.length > 0) {
+                        showSuccess(`Found ${data.length} role(s)`);
+                    }
                 } else {
-                    showResponse(data, '🎭 Roles');
+                    showResponse(data, 'Roles', '🎭');
                 }
             } catch (error) {
                 // Error already handled
@@ -581,9 +1429,12 @@
                 const data = await makeRequest('/api/auth0/connections');
                 if (Array.isArray(data)) {
                     updateStats(undefined, undefined, undefined, data.length);
-                    showResponse(data, `🔗 Connections (${data.length})`);
+                    showResponse(data, `Connections (${data.length} found)`, '🔗');
+                    if (data.length > 0) {
+                        showSuccess(`Found ${data.length} connection(s)`);
+                    }
                 } else {
-                    showResponse(data, '🔗 Connections');
+                    showResponse(data, 'Connections', '🔗');
                 }
             } catch (error) {
                 // Error already handled
@@ -592,7 +1443,6 @@
         
         async function loadDashboard() {
             showLoading();
-            document.getElementById('response').innerHTML = '<h3 style="color: #667eea; margin-bottom: 15px;">📊 Loading Dashboard...</h3>';
             
             try {
                 const [apps, users, roles, connections] = await Promise.all([
@@ -602,21 +1452,31 @@
                     makeRequest('/api/auth0/connections')
                 ]);
                 
-                updateStats(
-                    Array.isArray(apps) ? apps.length : 0,
-                    Array.isArray(users) ? users.length : 0,
-                    Array.isArray(roles) ? roles.length : 0,
-                    Array.isArray(connections) ? connections.length : 0
-                );
+                const appCount = Array.isArray(apps) ? apps.length : 0;
+                const userCount = Array.isArray(users) ? users.length : 0;
+                const roleCount = Array.isArray(roles) ? roles.length : 0;
+                const connCount = Array.isArray(connections) ? connections.length : 0;
                 
-                showResponse({
-                    applications: apps,
-                    users: users,
-                    roles: roles,
-                    connections: connections
-                }, '📊 Complete Dashboard');
+                updateStats(appCount, userCount, roleCount, connCount);
                 
-                showSuccess('Dashboard loaded successfully!');
+                const dashboardData = {
+                    timestamp: new Date().toISOString(),
+                    summary: {
+                        applications: appCount,
+                        users: userCount,
+                        roles: roleCount,
+                        connections: connCount
+                    },
+                    data: {
+                        applications: apps,
+                        users: users,
+                        roles: roles,
+                        connections: connections
+                    }
+                };
+                
+                showResponse(dashboardData, 'Complete Dashboard Overview', '📊');
+                showSuccess('Dashboard loaded successfully with all resources');
             } catch (error) {
                 // Error already handled
             }
@@ -624,14 +1484,26 @@
         
         function openCreateAppModal() {
             document.getElementById('createAppModal').classList.add('active');
+            setTimeout(() => {
+                document.getElementById('appName').focus();
+            }, 100);
         }
         
-        function closeModal() {
-            document.getElementById('createAppModal').classList.remove('active');
+        function openDeleteModal(clientId, appName) {
+            deleteAppId = clientId;
+            document.getElementById('deleteAppName').textContent = appName;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            if (modalId === 'deleteModal') {
+                deleteAppId = null;
+            }
         }
         
         async function createApplication() {
-            const name = document.getElementById('appName').value;
+            const name = document.getElementById('appName').value.trim();
             const appType = document.getElementById('appType').value;
             const callbacks = document.getElementById('appCallbacks').value
                 .split('\n')
@@ -639,7 +1511,7 @@
                 .filter(url => url.length > 0);
             
             if (!name) {
-                alert('Please enter an application name');
+                alert('⚠️ Please enter an application name');
                 return;
             }
             
@@ -654,38 +1526,76 @@
             
             try {
                 const data = await makeRequest('/api/auth0/applications', 'POST', applicationData);
-                showResponse(data, '✅ Application Created Successfully');
-                showSuccess(`Application "${name}" created successfully!`);
-                closeModal();
+                showResponse(data, 'Application Created Successfully', '✅');
+                showSuccess(`Application "${name}" has been created successfully`);
+                closeModal('createAppModal');
                 
                 // Clear form
                 document.getElementById('appName').value = '';
                 document.getElementById('appCallbacks').value = '';
                 
-                // Refresh applications list
-                setTimeout(() => getApplications(), 1000);
+                // Refresh applications list with delay
+                setTimeout(() => {
+                    listApplications();
+                }, 1500);
+            } catch (error) {
+                // Error already handled
+            }
+        }
+        
+        async function confirmDelete() {
+            if (!deleteAppId) return;
+            
+            closeModal('deleteModal');
+            
+            try {
+                const data = await makeRequest(`/api/auth0/applications/${deleteAppId}`, 'DELETE');
+                showResponse(data, 'Application Deleted Successfully', '✅');
+                showSuccess('Application has been deleted successfully');
+                
+                // Refresh applications list with delay
+                setTimeout(() => {
+                    listApplications();
+                }, 1500);
             } catch (error) {
                 // Error already handled
             }
         }
         
         function clearResponse() {
+            const responseContainer = document.getElementById('responseContainer');
+            responseContainer.style.display = 'none';
             document.getElementById('response').innerHTML = '';
             document.getElementById('error').style.display = 'none';
             document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'block';
         }
         
         // Close modal when clicking outside
         window.onclick = function(event) {
-            const modal = document.getElementById('createAppModal');
-            if (event.target === modal) {
-                closeModal();
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+                if (event.target.id === 'deleteModal') {
+                    deleteAppId = null;
+                }
             }
         }
         
-        // Test health on load
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal('createAppModal');
+                closeModal('deleteModal');
+            }
+        });
+        
+        // Initialize on load
         window.addEventListener('load', () => {
             testHealth();
+            // Auto-load dashboard after 1 second
+            setTimeout(() => {
+                loadDashboard();
+            }, 1000);
         });
     </script>
 </body>
